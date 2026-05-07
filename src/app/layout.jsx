@@ -62,11 +62,6 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
-  },
   alternates: {
     canonical: "https://fidigital.ae",
     types: {
@@ -173,7 +168,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#1D4ED8" />
-        <link rel="manifest" href="/manifest.json" />
       </head>
       <body>
         <ThemeProvider
