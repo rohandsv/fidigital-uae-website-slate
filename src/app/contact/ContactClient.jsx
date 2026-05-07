@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import FAQItem from "@/components/FAQItem";
 import Image from "next/image";
+import Link from "next/link";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -33,6 +34,7 @@ function Counter({ to, suffix = "" }) {
   }, [to, suffix]);
   return <span ref={el}>0{suffix}</span>;
 }
+
 
 /* ─── Show More / Less ──────────────────────────────────────────────────────── */
 function ShowMore({ children, collapsedHeight = 96 }) {
@@ -275,6 +277,20 @@ export default function ContactClient() {
   const containerRef = useRef(null);
   const [activeTab, setActiveTab] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
+  const [iframeSrc, setIframeSrc] = useState("");
+  const [iframeHeight, setIframeHeight] = useState(800);
+
+  useEffect(() => {
+    setIframeSrc('/zoho-form.html');
+
+    const handleMessage = (event) => {
+      if (event.data?.type === 'zoho-resize') {
+        setIframeHeight(event.data.height + 40);
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
 
   useGSAP(() => {
     // Hero — runs immediately on mount
@@ -852,34 +868,61 @@ export default function ContactClient() {
           </div>
         </section>
 
-        {/* ── CONTACT FORM ────────────────────────────────────────── */}
-        <section id="contact-form" className="cc-section" style={{ background: "var(--bg)" }}>
-          <div className="container" style={{ maxWidth: "1000px" }}>
-            <div className="reveal-item" style={{ textAlign: "center", marginBottom: "3rem" }}>
-              <div className="section-label">READY TO START?</div>
-              <h2 className="section-title">How Do I Book a Free AI Readiness Audit for My Company?</h2>
-              <p className="section-desc" style={{ margin: "0 auto" }}>AED 0 · 45-minute session · 1-week report turnaround</p>
-            </div>
+      {/* FORM SECTION */}
+      <section id="contact-form" className="cc-section" style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border)' }}>
+        <div className="container" style={{ maxWidth: '900px' }}>
+          <div className="rv" style={{ textAlign: "center", marginBottom: "3rem" }}>
+            <div className="section-label">Get in Touch</div>
+            <h2 className="section-title">Ready to Automate Your Operations?</h2>
+            <p className="section-desc" style={{ margin: "0 auto" }}>Fill out the form below or skip to book a direct call. We respond within 4 hours during business days.</p>
+          </div>
+          
+          <div className="card" style={{ 
+            padding: 'min(4rem, 8vw)', 
+            borderRadius: '40px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.05)',
+            border: '1px solid var(--border)',
+            background: 'var(--bg)',
+            overflow: 'hidden',
+            position: 'relative'
+          }}>
+            {iframeSrc && (
+              <iframe
+                src={iframeSrc}
+                style={{
+                  width: '100%',
+                  height: `${iframeHeight}px`,
+                  border: 'none',
+                  overflow: 'hidden',
+                  transition: 'height 0.3s ease'
+                }}
+                title="Contact Form"
+              />
+            )}
             
-            <div className="card rv" style={{ padding: "clamp(1.5rem, 4vw, 3rem)" }}>
-              <style dangerouslySetInnerHTML={{__html: `
-                .zoho-iframe-container { width: 100%; min-height: 750px; overflow: hidden; }
-                .zoho-iframe-container iframe { width: 100%; height: 750px; border: none; }
-                @media (max-width: 650px) {
-                  .zoho-iframe-container { min-height: 1100px; }
-                  .zoho-iframe-container iframe { height: 1100px; }
-                }
-                @media (max-width: 480px) {
-                  .zoho-iframe-container { min-height: 1200px; }
-                  .zoho-iframe-container iframe { height: 1200px; }
-                }
-              `}} />
-              <div className="zoho-iframe-container">
-                <iframe src="/zoho-form.html" title="Contact Us Form" scrolling="no"></iframe>
-              </div>
+            <div style={{ 
+              marginTop: '3rem', 
+              paddingTop: '2rem', 
+              borderTop: '1px dashed var(--border)',
+              textAlign: 'center' 
+            }}>
+              <p style={{ fontSize: '1rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <span>Prefer to skip the form?</span>
+                <Link href="/book-a-fit-call/" style={{ 
+                  color: 'var(--primary)', 
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem'
+                }}>
+                  Book a fit call immediately <ArrowRight size={16} />
+                </Link>
+              </p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
         {/* ── LEFT SIDE CONTENT + NEW CTA SECTION MOVED BELOW ───────── */}
         <section style={{ padding: "clamp(60px, 10vh, 100px) 0", background: "var(--bg-secondary)", borderTop: "1px solid var(--border)" }}>
