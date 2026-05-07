@@ -281,7 +281,7 @@ export default function ContactClient() {
   const [iframeHeight, setIframeHeight] = useState(800);
 
   useEffect(() => {
-    setIframeSrc('/zoho-form.html');
+    setIframeSrc('/zoho-form');
 
     const handleMessage = (event) => {
       if (event.data?.type === 'zoho-resize') {
